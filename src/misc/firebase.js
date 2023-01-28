@@ -5,7 +5,7 @@ import 'firebase/database'
 const config ={
     apiKey: "AIzaSyDbzUe9BJLxKTu0SKtqjZ2PZf4nGH3xSyo",
     authDomain: "chat-web-app-91310.firebaseapp.com",
-    databaseURL: "https://console.firebase.google.com/project/chat-web-app-91310/database/chat-web-app-91310-default-rtdb/data/~2F",
+    databaseURL: "https://chat-web-app-91310-default-rtdb.firebaseio.com/",
     projectId: "chat-web-app-91310",
     storageBucket: "chat-web-app-91310.appspot.com",
     messagingSenderId: "511176263115",
