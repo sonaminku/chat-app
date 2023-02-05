@@ -21,10 +21,12 @@ export const ProfileProvider = ({ children }) => {
   useEffect(() => {
     let userRef;
     let userStatusRef;
+
     const authUnSub = auth.onAuthStateChanged(authObj => {
       if (authObj) {
         userStatusRef = database.ref(`/status/${authObj.uid}`);
         userRef = database.ref(`/profiles/${authObj.uid}`);
+
         userRef.on('value', snap => {
           const { name, createdAt, avatar } = snap.val();
 
@@ -39,10 +41,10 @@ export const ProfileProvider = ({ children }) => {
           setIsLoading(false);
         });
 
-        database()
+        database
           .ref('.info/connected')
-          .on('value', snapshot => {
-            if (snapshot.val() === false) {
+          .on('value', (snapshot) => {
+            if (!!snapshot.val() === false) {
               return;
             }
             userStatusRef
@@ -59,7 +61,7 @@ export const ProfileProvider = ({ children }) => {
         if (userStatusRef) {
           userStatusRef.off();
         }
-        database().ref('.info/connected').off()
+        database.ref('.info/connected').off()
 
         setProfile(null);
         setIsLoading(false);
@@ -67,7 +69,7 @@ export const ProfileProvider = ({ children }) => {
     });
     return () => {
       authUnSub();
-      database().ref('.info/connected').off()
+      database.ref('.info/connected').off()
       if (userRef) {
         userRef.off();
       }
