@@ -1,3 +1,4 @@
+/* eslint-disable spaced-comment */
 /* eslint-disable react/jsx-no-constructed-context-values */
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import firebase from 'firebase/app';
@@ -24,6 +25,7 @@ export const ProfileProvider = ({ children }) => {
 
     const authUnSub = auth.onAuthStateChanged(authObj => {
       if (authObj) {
+        //console.log('authObj.uid', authObj.uid)
         userStatusRef = database.ref(`/status/${authObj.uid}`);
         userRef = database.ref(`/profiles/${authObj.uid}`);
 
