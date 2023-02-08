@@ -2,7 +2,7 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import firebase from 'firebase/app';
-import { auth, database } from '../misc/firebase';
+import { auth, database, messaging } from '../misc/firebase';
 
 export const isOfflineForDatabase = {
   state: 'offline',
@@ -22,8 +22,9 @@ export const ProfileProvider = ({ children }) => {
   useEffect(() => {
     let userRef;
     let userStatusRef;
+    let tokenRefreshUnsub;
 
-    const authUnSub = auth.onAuthStateChanged(authObj => {
+    const authUnSub = auth.onAuthStateChanged(async authObj => {
       if (authObj) {
         userStatusRef = database.ref(`/status/${authObj.uid}`);
         userRef = database.ref(`/profiles/${authObj.uid}`);
@@ -42,19 +43,41 @@ export const ProfileProvider = ({ children }) => {
           setIsLoading(false);
         });
 
-        database
-          .ref('.info/connected')
-          .on('value', (snapshot) => {
-            if (!!snapshot.val() === false) {
-              return;
+        database.ref('.info/connected').on('value', snapshot => {
+          if (!!snapshot.val() === false) {
+            return;
+          }
+          userStatusRef
+            .onDisconnect()
+            .set(isOfflineForDatabase)
+            .then(() => {
+              userStatusRef.set(isOnlineForDatabase);
+            });
+        });
+
+        if (messaging) {
+          try {
+            const currentToken = await messaging.getToken()
+            if(currentToken) {
+              await database.ref(`/fcm_tokens/${currentToken}`).set(authObj.uid)
+              // todo
             }
-            userStatusRef
-              .onDisconnect()
-              .set(isOfflineForDatabase)
-              .then(() => {
-                userStatusRef.set(isOnlineForDatabase);
-              });
-          });
+          } catch (err) {
+            console.log('An error occurred while retrieving token. ', err);
+          }
+
+          tokenRefreshUnsub = messaging.onTokenRefresh(async() =>{
+            try {
+              const currentToken = await messaging.getToken()
+              if(currentToken) {
+                await database.ref(`/fcm_tokens/${currentToken}`).set(authObj.uid)
+                // todo
+              }
+            } catch (err) {
+              console.log('An error occurred while retrieving token. ', err);
+            }
+          })
+         
       } else {
         if (userRef) {
           userRef.off();
@@ -62,20 +85,27 @@ export const ProfileProvider = ({ children }) => {
         if (userStatusRef) {
           userStatusRef.off();
         }
-        database.ref('.info/connected').off()
+        if(tokenRefreshUnsub) {
+          tokenRefreshUnsub()
+        }
+        database.ref('.info/connected').off();
 
         setProfile(null);
         setIsLoading(false);
       }
+    }
     });
     return () => {
       authUnSub();
-      database.ref('.info/connected').off()
+      database.ref('.info/connected').off();
       if (userRef) {
         userRef.off();
       }
       if (userStatusRef) {
         userStatusRef.off();
+      }
+      if(tokenRefreshUnsub) {
+        tokenRefreshUnsub()
       }
     };
   }, []);
