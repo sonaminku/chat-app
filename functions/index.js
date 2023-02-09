@@ -1,4 +1,4 @@
-require("firebase-functions");
+const functions = require("firebase-functions");
 
 const admin = require("firebase-admin");
 
@@ -9,9 +9,6 @@ admin.initializeApp({
   databaseURL: "https://chat-web-app-91310-default-rtdb.firebaseio.com",
 });
 
-// // Create and deploy your first functions
-// // https://firebase.google.com/docs/functions/get-started
-//
 const {sendFcm} = require("./src/fcm");
 
 exports.sendFcm = sendFcm;

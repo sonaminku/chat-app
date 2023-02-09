@@ -79,22 +79,22 @@ export const ProfileProvider = ({ children }) => {
               console.log('An error occurred while retrieving token. ', err);
             }
           })
-         
-      } else {
-        if (userRef) {
-          userRef.off();
-        }
-        if (userStatusRef) {
-          userStatusRef.off();
-        }
-        if(tokenRefreshUnsub) {
-          tokenRefreshUnsub()
-        }
-        database.ref('.info/connected').off();
-
-        setProfile(null);
-        setIsLoading(false);
+      } 
+    }
+    else {
+      if (userRef) {
+        userRef.off();
       }
+      if (userStatusRef) {
+        userStatusRef.off();
+      }
+      if(tokenRefreshUnsub) {
+        tokenRefreshUnsub()
+      }
+      database.ref('.info/connected').off();
+
+      setProfile(null);
+      setIsLoading(false);
     }
     });
     return () => {
