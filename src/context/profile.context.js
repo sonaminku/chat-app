@@ -63,6 +63,7 @@ export const ProfileProvider = ({ children }) => {
               // todo
             }
           } catch (err) {
+            // eslint-disable-next-line no-console
             console.log('An error occurred while retrieving token. ', err);
           }
 
@@ -74,6 +75,7 @@ export const ProfileProvider = ({ children }) => {
                 // todo
               }
             } catch (err) {
+              // eslint-disable-next-line no-console
               console.log('An error occurred while retrieving token. ', err);
             }
           })
