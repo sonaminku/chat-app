@@ -8,7 +8,7 @@ export function getNameInitials(name) {
 }
 
 export function transformToArr(snapVal) {
-  return snapVal ? Object.keys(snapVal) : []
+  return snapVal ? Object.keys(snapVal) : [];
 }
 
 export function transformToArrWithId(snapVal) {
@@ -33,27 +33,35 @@ export async function getUserUpdates(userId, keyToUpdate, value, db) {
     .equalTo(userId)
     .once('value');
 
-    const [mSnap, rSnap] = await Promise.all([getMsgs, getRooms])
+  const [mSnap, rSnap] = await Promise.all([getMsgs, getRooms]);
 
-    mSnap.forEach(msgSnap =>{
-        updates[`/messages/${msgSnap.key}/author/${keyToUpdate}`] = value
-    })
+  mSnap.forEach(msgSnap => {
+    updates[`/messages/${msgSnap.key}/author/${keyToUpdate}`] = value;
+  });
 
-    rSnap.forEach(roomSnap =>{
-        updates[`/rooms/${roomSnap.key}/lastMessage/author/${keyToUpdate}`] = value
-    })
+  rSnap.forEach(roomSnap => {
+    updates[`/rooms/${roomSnap.key}/lastMessage/author/${keyToUpdate}`] = value;
+  });
 
-    return updates
+  return updates;
 }
 
 export function groupBy(array, groupingKeyfn) {
-  return array.reduce((result, item)=>{
-    const groupingKey = groupingKeyfn(item)
+  return array.reduce((result, item) => {
+    const groupingKey = groupingKeyfn(item);
 
-    if(!result[groupingKey]) {
+    if (!result[groupingKey]) {
       result[groupingKey] = [];
     }
-    result[groupingKey].push(item)
-    return result
-  }, {})
+    result[groupingKey].push(item);
+    return result;
+  }, {});
 }
+
+export const isLocalhost = Boolean(
+  window.location.hostname === 'localhost' ||
+    window.location.hostname === ['::1'] ||
+    window.location.hostname.match(
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+    )
+);

@@ -36,6 +36,9 @@ const CreateRoonBtnModal = () => {
             createdAt: firebase.database.ServerValue.TIMESTAMP,
             admins: {
                 [auth.currentUser.uid]: true
+            },
+            fcmUsers: {
+                [auth.currentUser.uid]: true
             }
         }
         try {

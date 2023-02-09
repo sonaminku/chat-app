@@ -4,7 +4,7 @@ const admin = require("firebase-admin");
 const database = admin.database()
 const messaging = admin.messaging()
 
-exports.sendFcm = functions.https.onCall(async (data, context)=>{
+exports.sendFcm = functions.region('europe-west3').https.onCall(async (data, context) => {
   checkIfAuth(context);
 
   const {chatId, title, message} = data;
