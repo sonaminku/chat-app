@@ -1,4 +1,3 @@
-/* eslint-disable spaced-comment */
 /* eslint-disable react/jsx-no-constructed-context-values */
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import firebase from 'firebase/app';
@@ -63,6 +62,7 @@ export const ProfileProvider = ({ children }) => {
               // todo
             }
           } catch (err) {
+            
             // eslint-disable-next-line no-console
             console.log('An error occurred while retrieving token. ', err);
           }
@@ -80,16 +80,15 @@ export const ProfileProvider = ({ children }) => {
             }
           })
       } 
-    }
-    else {
+    } else {
       if (userRef) {
         userRef.off();
       }
-      if (userStatusRef) {
-        userStatusRef.off();
-      }
       if(tokenRefreshUnsub) {
         tokenRefreshUnsub()
+      }
+      if (userStatusRef) {
+        userStatusRef.off();
       }
       database.ref('.info/connected').off();
 
@@ -103,11 +102,11 @@ export const ProfileProvider = ({ children }) => {
       if (userRef) {
         userRef.off();
       }
-      if (userStatusRef) {
-        userStatusRef.off();
-      }
       if(tokenRefreshUnsub) {
         tokenRefreshUnsub()
+      }
+      if (userStatusRef) {
+        userStatusRef.off();
       }
     };
   }, []);

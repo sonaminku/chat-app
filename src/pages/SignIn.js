@@ -1,6 +1,7 @@
 import React from 'react'
 import firebase from 'firebase/app'
 import { Alert, Button, Col, Container, Grid, Icon, Panel, Row } from 'rsuite'
+import Modal from '../components/Modal'
 import { auth, database } from '../misc/firebase'
 
 const SignIn = () => {
@@ -24,16 +25,19 @@ const SignIn = () => {
     const onGoogleSignIn =()=>{
         signInWithProvider(new firebase.auth.GoogleAuthProvider())
     }
+
   return (
     <Container>
         <Grid className='mt-page'>
             <Row>
                 <Col xs={24} md={12} mdOffset={6}>
                     <Panel>
+                        <Modal>
                         <div className='text-center'>
                             <h2>Welcome to Chat</h2>
                             <p>Progressive chat platform for neophytes</p>
                         </div>
+                        </Modal>
 
                         <div className='mt-3'>
                             <Button block color='blue' onClick={onFacebookSignIn}>
